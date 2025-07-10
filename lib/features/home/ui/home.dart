@@ -1,4 +1,8 @@
+import 'package:bloc_practice/features/cart/ui/cart.dart';
+import 'package:bloc_practice/features/home/bloc/home_bloc.dart';
+import 'package:bloc_practice/features/wishlist/ui/wishlist.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -8,8 +12,52 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final HomeBloc homeBloc = HomeBloc();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("Suheer's Grocery App")));
+    return BlocConsumer<HomeBloc, HomeState>(
+      bloc: homeBloc,
+      listenWhen: (previous, current) => current is HomeActionState,
+      buildWhen: (previous, current) => current is! HomeActionState,
+      listener: (context, state) {
+        if (state is HomeNavigateToWishlistActionState) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Wishlist()),
+          );
+        } else if (state is HomeNavigateToCartActionState) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Cart()),
+          );
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.teal,
+            title: Text(
+              "Suheer's Grocery App",
+              style: TextStyle(color: Colors.white),
+            ),
+
+            actions: [
+              IconButton(
+                onPressed: () {
+                  homeBloc.add(HomeWishlistButtonNavigateEvent());
+                },
+                icon: Icon(Icons.favorite_border, color: Colors.white),
+              ),
+              IconButton(
+                onPressed: () {
+                  homeBloc.add(HomeCartButtonNavigateEvent());
+                },
+                icon: Icon(Icons.shopping_bag_outlined, color: Colors.white),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
