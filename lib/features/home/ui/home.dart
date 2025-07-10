@@ -12,6 +12,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    homeBloc.add(HomeInitialEvent());
+    super.initState();
+  }
+
   final HomeBloc homeBloc = HomeBloc();
   @override
   Widget build(BuildContext context) {
@@ -33,30 +39,38 @@ class _HomeState extends State<Home> {
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.teal,
-            title: Text(
-              "Suheer's Grocery App",
-              style: TextStyle(color: Colors.white),
-            ),
+        if (state.runtimeType == HomeLoadingState) {
+          return Scaffold(body: Center(child: CircularProgressIndicator()));
+        } else if (state.runtimeType == HomeLoadedSuccessState) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.teal,
+              title: Text(
+                "Suheer's Grocery App",
+                style: TextStyle(color: Colors.white),
+              ),
 
-            actions: [
-              IconButton(
-                onPressed: () {
-                  homeBloc.add(HomeWishlistButtonNavigateEvent());
-                },
-                icon: Icon(Icons.favorite_border, color: Colors.white),
-              ),
-              IconButton(
-                onPressed: () {
-                  homeBloc.add(HomeCartButtonNavigateEvent());
-                },
-                icon: Icon(Icons.shopping_bag_outlined, color: Colors.white),
-              ),
-            ],
-          ),
-        );
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    homeBloc.add(HomeWishlistButtonNavigateEvent());
+                  },
+                  icon: Icon(Icons.favorite_border, color: Colors.white),
+                ),
+                IconButton(
+                  onPressed: () {
+                    homeBloc.add(HomeCartButtonNavigateEvent());
+                  },
+                  icon: Icon(Icons.shopping_bag_outlined, color: Colors.white),
+                ),
+              ],
+            ),
+          );
+        } else if (state.runtimeType == HomeErrorState) {
+          return Scaffold(body: Center(child: Text("Error in loading state")));
+        }
+
+        return const Scaffold(body: SizedBox.shrink());
       },
     );
   }

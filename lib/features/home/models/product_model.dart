@@ -18,4 +18,17 @@ class ProductModel {
     required this.imageUrl,
     required this.inStock,
   });
+
+  factory ProductModel.fromJson(Map<String, dynamic> json) {
+    return ProductModel(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      category: json['category'],
+      price: json['price'],
+      unit: json['unit'],
+      imageUrl: json['imageUrl'],
+      inStock: json['inStock'],
+    );
+  }
 }
