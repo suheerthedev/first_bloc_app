@@ -1,5 +1,4 @@
 import 'package:bloc_practice/features/cart/bloc/cart_bloc.dart';
-import 'package:bloc_practice/features/home/bloc/home_bloc.dart';
 import 'package:bloc_practice/features/home/models/product_model.dart';
 import 'package:flutter/material.dart';
 
@@ -76,22 +75,9 @@ class CartTileWidget extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      // cartBloc.add(
-                      //   HomeProductWishlistButtonClickedEvent(product: product),
-                      // );
+                      cartBloc.add(CartRemoveFromCartEvent(cartItem: cartItem));
                     },
-                    icon: Icon(Icons.favorite_border, color: Colors.white),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      // cartBloc.add(
-                      //   HomeProductCartButtonClickedEvent(product: product),
-                      // );
-                    },
-                    icon: Icon(
-                      Icons.shopping_bag_outlined,
-                      color: Colors.white,
-                    ),
+                    icon: Icon(Icons.shopping_bag, color: Colors.white),
                   ),
                 ],
               ),

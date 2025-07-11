@@ -11,6 +11,7 @@ part 'cart_state.dart';
 class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc() : super(CartInitial()) {
     on<CartInitialEvent>(cartInitialEvent);
+    on<CartRemoveFromCartEvent>(cartRemoveFromCartEvent);
   }
 
   FutureOr<void> cartInitialEvent(
@@ -19,6 +20,23 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   ) async {
     emit(CartLoadingState());
     await Future.delayed(Duration(seconds: 3));
-    emit(CartSuccessState(cartItems: CartItems.cartItems));
+    if (CartItems.cartItems.isNotEmpty) {
+      emit(CartSuccessState(cartItems: CartItems.cartItems));
+    } else {
+      emit(CartEmptyState());
+    }
+  }
+
+  FutureOr<void> cartRemoveFromCartEvent(
+    CartRemoveFromCartEvent event,
+    Emitter<CartState> emit,
+  ) {
+    CartItems.cartItems.remove(event.cartItem);
+    emit(CartRemoveActionState());
+    if (CartItems.cartItems.isEmpty) {
+      emit(CartEmptyState());
+    } else {
+      emit(CartSuccessState(cartItems: CartItems.cartItems));
+    }
   }
 }

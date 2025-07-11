@@ -30,10 +30,26 @@ class _CartState extends State<Cart> {
         bloc: cartBloc,
         listenWhen: (previous, current) => current is CartActionState,
         buildWhen: (previous, current) => current is! CartActionState,
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state.runtimeType == CartRemoveActionState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Item removed"),
+                duration: Duration(seconds: 1),
+              ),
+            );
+          }
+        },
         builder: (context, state) {
           if (state.runtimeType == CartLoadingState) {
             return Center(child: CircularProgressIndicator());
+          } else if (state.runtimeType == CartEmptyState) {
+            return Center(
+              child: Text(
+                "Cart is empty",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            );
           } else if (state.runtimeType == CartSuccessState) {
             final successState = state as CartSuccessState;
             return ListView.builder(
@@ -46,7 +62,6 @@ class _CartState extends State<Cart> {
               },
             );
           }
-
           return const SizedBox.shrink();
         },
       ),
