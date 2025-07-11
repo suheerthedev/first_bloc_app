@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_practice/data/cart_items.dart';
 import 'package:bloc_practice/data/grocery_data.dart';
+import 'package:bloc_practice/data/wishlist_items.dart';
 import 'package:bloc_practice/features/home/models/product_model.dart';
 import 'package:meta/meta.dart';
 
@@ -60,6 +62,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) {
     print("Wishlist product clicked");
+    if (WishlistItems.wishlistItems.contains(event.product)) {
+      emit(HomeProductItemAlreadyInWishlistActionState());
+    } else {
+      WishlistItems.wishlistItems.add(event.product);
+      emit(HomeProductItemWishlistedActionState());
+    }
   }
 
   FutureOr<void> homeProductCartButtonClickedEvent(
@@ -67,5 +75,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) {
     print("Cart product clicked");
+    if (CartItems.cartItems.contains(event.product)) {
+      emit(HomeProductItemAlreadyInCartActionState());
+    } else {
+      CartItems.cartItems.add(event.product);
+      emit(HomeProductItemCartedActionState());
+    }
   }
 }
